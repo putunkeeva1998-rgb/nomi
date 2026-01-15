@@ -235,6 +235,8 @@
             },
             isFav(item) { return this.favorites.some(f => f.name === item.name) },
             initMap() {
+                const mapContainer = document.getElementById('map');
+                if (!mapContainer) return;
                 const map = new mapgl.Map('map', { center: [107.58, 51.83], zoom: 12, key: 'cab82c94-e619-42eb-9814-3361712feaf0' });
                 map.on('click', e => {
                     fetch(`https://catalog.api.2gis.com/3.0/items/geocode?lon=${e.lngLat[0]}&lat=${e.lngLat[1]}&fields=items.address&key=cab82c94-e619-42eb-9814-3361712feaf0`)
@@ -266,6 +268,7 @@
         },
         mounted() {
             tg.ready();
+            tg.expand();
             if (tg.initDataUnsafe?.user) {
                 this.user.name = tg.initDataUnsafe.user.first_name;
                 this.user.photo = tg.initDataUnsafe.user.photo_url;
