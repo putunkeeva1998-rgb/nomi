@@ -181,7 +181,7 @@
                 user: { name: 'Гость', photo: '' },
                 address: '',
                 deliveryZone: 'Город',
-                deliveryZones: { 'Сотые': 400, 'Нижний Сяантуй': 700, 'Город': 1200, 'Отдаленные': 2000 },
+                deliveryZones: { 'Сотые': 400, 'Нижний': 700, 'Город': 1200, 'Отдаленные': 2000 },
                 form: { name: '', phone: '' },
                 cart: JSON.parse(localStorage.getItem('jade_cart') || '[]'),
                 favorites: JSON.parse(localStorage.getItem('jade_fav') || '[]'),
@@ -202,6 +202,7 @@
                     'Выпечка': [
                         {name:'Боовы', weight:'5 шт', price:70},
                         {name:'Блины', weight:'3 шт', price:70}
+                        {name:'Урмэ', weight:'100 г', price:100}
                     ],
                     'Напитки': [{name:'Морс брусничный', weight:'0.33 л', price:80}]
                 }
