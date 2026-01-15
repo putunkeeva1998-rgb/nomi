@@ -3,280 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jade Delivery</title>
+    <title>Jade Food</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --jade: #006400; --jade-light: #00a86b; --bg: #f4f7f6; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; background: var(--bg); color: #333; }
+        :root { --jade: #006400; --bg: #f4f7f6; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background: var(--bg); color: #333; overflow-x: hidden; }
         
-        /* График работы */
-        .work-hours { font-size: 10px; text-align: center; padding: 5px; color: var(--jade); font-weight: 600; background: #fff; }
-        
-        /* Навигация */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 0 25px; border-top: 1px solid #eee; z-index: 1000; }
-        .nav-item { border: none; background: none; color: #999; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 600; flex: 1; }
-        .nav-item.active { color: var(--jade); }
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 4px; }
-
         /* Боковое меню */
-        .side-menu { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .side-menu { position: fixed; left: -280px; top: 0; width: 250px; height: 100%; background: #fff; z-index: 1000; transition: 0.3s; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
         .side-menu.open { left: 0; }
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1500; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+        .overlay.show { display: block; }
 
-        /* Таблица Меню */
-        .category-title { padding: 15px; font-weight: 800; color: var(--jade); text-transform: uppercase; }
-        .menu-table { width: 100%; border-collapse: collapse; background: #fff; margin-bottom: 20px; }
-        .menu-table td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
-        .price-text { font-weight: 700; color: var(--jade); white-space: nowrap; }
-        
-        /* Кнопки и Счётчики */
-        .fav-btn { border: none; background: none; color: #ccc; font-size: 20px; padding: 0 5px; }
-        .fav-btn.active { color: #ff4d6d; }
-        .counter-btn { background: var(--jade); color: #fff; border: none; border-radius: 5px; width: 25px; height: 25px; font-weight: 800; }
-        
-        /* Корзина и Доставка */
-        .cart-card { background: #fff; border-radius: 15px; padding: 15px; margin: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .delivery-option { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; }
-        .delivery-option.selected { border-color: var(--jade); background: #f0fff0; }
-        
-        #map { width: 100%; height: 200px; border-radius: 10px; margin: 10px 0; }
-        .main-btn { width: calc(100% - 30px); margin: 15px; padding: 18px; background: var(--jade); color: #fff; border: none; border-radius: 15px; font-weight: 800; font-size: 16px; }
-        
-        .footer-tag { text-align: center; font-size: 10px; color: #ccc; padding: 20px; margin-bottom: 80px; }
+        /* Шапка */
+        .header { background: #fff; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .burger { font-size: 24px; cursor: pointer; color: var(--jade); }
+
+        /* Карточки товаров (без звездочек) */
+        .card { background: #fff; margin: 10px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        /* Карта */
+        #map { width: 100%; height: 250px; border-radius: 12px; margin: 10px 0; background: #eee; }
+
+        /* Нижняя навигация (3 кнопки) */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
+        .nav-item { border: none; background: none; font-size: 11px; color: #999; font-weight: 700; text-transform: uppercase; }
+        .nav-item.active { color: var(--jade); }
+
+        /* Кнопка оформить */
+        .main-btn { background: var(--jade); color: #fff; border: none; padding: 18px; border-radius: 15px; width: 100%; font-weight: 800; font-size: 16px; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-<div id="app">
-    <div class="work-hours">ГРАФИК РАБОТЫ: 10:00 — 22:00</div>
-    
-    <div v-if="isSideOpen" class="overlay" @click="isSideOpen = false"></div>
-    <div :class="['side-menu', isSideOpen ? 'open' : '']">
-        <h3 :style="{color: 'var(--jade)'}">Информация</h3>
-        <p @click="alert('Мы готовим из свежих продуктов!')">🏠 О нас</p>
-        <p @click="alert('Доставка по городу и пригороду')">🚚 Доставка</p>
-    </div>
-
-    <div style="padding: 10px 15px; background: #fff; display: flex; align-items: center;">
-        <button @click="isSideOpen = true" style="background:none; border:none; font-size:24px; color:var(--jade)">☰</button>
-        <div style="flex:1; text-align:center; font-weight:800; color:var(--jade)">JADE FOOD</div>
-    </div>
-
-    <div class="container" v-show="activeTab === 'menu'">
-        <div v-for="(items, cat) in menuData" :key="cat">
-            <div class="category-title">{{ cat }}</div>
-            <table class="menu-table">
-                <tr v-for="item in items" :key="item.name">
-                    <td style="width: 40px">
-                        <button class="fav-btn" :class="{active: isFav(item)}" @click="toggleFav(item)">❤</button>
-                    </td>
-                    <td>
-                        <div style="font-weight:700">{{ item.name }}</div>
-                        <div style="font-size:10px; color:#999">{{ item.weight }}</div>
-                    </td>
-                    <td class="price-text">{{ item.price }} ₽</td>
-                    <td style="width: 90px; text-align:right">
-                        <div v-if="getQty(item.name) > 0">
-                            <button class="counter-btn" @click="updateCart(item, -1)">-</button>
-                            <span style="margin: 0 8px; font-weight:700">{{ getQty(item.name) }}</span>
-                            <button class="counter-btn" @click="updateCart(item, 1)">+</button>
-                        </div>
-                        <button v-else class="counter-btn" style="width: 60px" @click="updateCart(item, 1)">В ЧЕК</button>
-                    </td>
-                </tr>
-            </table>
+    <div id="app">
+        <div class="overlay" :class="{show: isSideMenuOpen}" @click="isSideMenuOpen = false"></div>
+        <div class="side-menu" :class="{open: isSideMenuOpen}">
+            <h2 style="color: var(--jade)">О нас</h2>
+            <p>Jade Food — натуральные продукты и традиционные рецепты.</p>
+            <p>📍 г. Улан-Удэ</p>
+            <p>🕙 Работаем: 10:00 - 22:00</p>
+            <button @click="isSideMenuOpen = false" class="main-btn" style="padding: 10px;">Закрыть</button>
         </div>
-        <div class="footer-tag">Разработано @optania</div>
-    </div>
 
-    <div class="container" v-show="activeTab === 'fav'">
-        <div class="category-title">Избранное</div>
-        <div v-if="favorites.length === 0" style="text-align:center; padding:50px; color:#999">Тут пока пусто</div>
-        <table class="menu-table" v-else>
-            <tr v-for="item in favorites" :key="item.name">
-                <td><div style="font-weight:700">{{ item.name }}</div></td>
-                <td class="price-text">{{ item.price }} ₽</td>
-                <td><button class="counter-btn" @click="updateCart(item, 1)">+</button></td>
-            </tr>
-        </table>
-    </div>
+        <div class="header">
+            <div class="burger" @click="isSideMenuOpen = true">☰</div>
+            <div style="font-weight: 800; color: var(--jade);">JADE FOOD</div>
+            <div style="width: 24px;"></div>
+        </div>
 
-    <div class="container" v-show="activeTab === 'cart'">
-        <div class="category-title">Корзина</div>
-        <div v-if="cart.length === 0" style="text-align:center; padding:50px; color:#999">Корзина пуста</div>
-        <div v-else>
-            <div class="cart-card">
-                <div v-for="i in cart" :key="i.name" style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span>{{ i.name }} x {{ i.qty }}</span>
-                    <span style="font-weight:700">{{ i.price * i.qty }} ₽</span>
-                </div>
-                <hr border="0" style="height:1px; background:#eee">
-                <div style="font-weight:800; display:flex; justify-content:space-between">
-                    <span>Итого блюда:</span> <span>{{ cartTotal }} ₽</span>
+        <div v-if="activeTab === 'menu'" style="padding-bottom: 80px;">
+            <div v-for="(items, cat) in menuData" :key="cat">
+                <div style="padding: 15px 15px 5px; font-weight: 800; font-size: 13px; color: #888;">{{ cat.toUpperCase() }}</div>
+                <div v-for="item in items" :key="item.name" class="card">
+                    <div>
+                        <div style="font-weight: 700;">{{ item.name }}</div>
+                        <div style="font-size: 12px; color: #aaa;">{{ item.weight }}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: var(--jade); font-weight: 800; margin-bottom: 5px;">{{ item.price }} ₽</div>
+                        <button @click="addToCart(item)" style="background: var(--jade); color: #fff; border: none; border-radius: 8px; padding: 6px 15px;">В ЧЕК</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="cart-card">
-                <input class="input-c" v-model="form.name" placeholder="Имя" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px">
-                <input class="input-c" v-model="form.phone" placeholder="Телефон" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px">
-                <div id="map" style="width: 100%; height: 300px; background: #eee; border-radius: 10px; margin-bottom: 10px;"></div>
-                <div style="font-size:12px; margin-bottom:10px">📍 {{ address || 'Укажите адрес на карте' }}</div>
-            </div>
-
-            <div class="cart-card">
-                <div style="font-weight:800; margin-bottom:10px">РАЙОН ДОСТАВКИ:</div>
-                <div v-for="(p, name) in deliveryZones" :key="name" 
-                     :class="['delivery-option', deliveryZone === name ? 'selected' : '']"
-                     @click="deliveryZone = name">
-                    <input type="radio" :checked="deliveryZone === name">
-                    <div style="flex:1">{{ name }}</div>
-                    <div style="font-weight:700">{{ p }} ₽</div>
-                </div>
-            </div>
-
-            <button class="main-btn" @click="sendOrder">ОФОРМИТЬ — {{ finalTotal }} ₽</button>
         </div>
-    </div>
 
-    <div class="container" v-show="activeTab === 'profile'">
-        <div class="cart-card" style="text-align:center">
-            <img :src="user.photo || 'https://via.placeholder.com/100'" style="width:80px; border-radius:50%; border:3px solid var(--jade)">
-            <h3 style="margin:10px 0">{{ user.name }}</h3>
-        </div>
-        <div class="category-title">Мои заказы</div>
-        <div v-for="order in orderHistory" :key="order.id" class="cart-card" style="font-size:12px">
-            <div style="font-weight:800; display:flex; justify-content:space-between">
-                <span>№ {{ order.id }}</span> <span>{{ order.total }} ₽</span>
+        <div v-if="activeTab === 'cart'" style="padding: 10px; padding-bottom: 100px;">
+            <div class="card" v-for="i in cart" style="margin-bottom: 8px;">
+                <span style="font-weight: 600;">{{ i.name }} x{{ i.qty }}</span>
+                <span style="font-weight: 800; color: var(--jade);">{{ i.price * i.qty }} ₽</span>
             </div>
-            <div style="color:#666; margin-top:5px">{{ order.items }}</div>
+            
+            <div v-if="cart.length > 0">
+                <div style="margin: 15px 5px 5px; font-weight: 700;">Укажите адрес на карте:</div>
+                <div id="map"></div>
+                <div style="font-size: 12px; color: #666; margin-bottom: 15px;">Координаты: {{ address || 'не выбраны' }}</div>
+                <button class="main-btn" @click="sendOrder">ОФОРМИТЬ ЗАКАЗ — {{ total }} ₽</button>
+            </div>
+            <div v-else style="text-align: center; margin-top: 50px; color: #ccc; font-weight: 700;">ВАША КОРЗИНА ПУСТА</div>
         </div>
-        <div class="footer-tag">Разработано @optania</div>
-    </div>
 
-    <nav class="bottom-nav">
-        <button v-for="t in ['menu', 'fav', 'cart', 'profile']" 
-                @click="activeTab = t" 
-                :class="['nav-item', activeTab === t ? 'active' : '']">
-            <svg v-if="t==='menu'" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            <svg v-if="t==='fav'" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            <svg v-if="t==='cart'" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            <svg v-if="t==='profile'" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-            <span>{{ {menu:'Меню', fav:'Избранное', cart:'Корзина', profile:'Профиль'}[t] }}</span>
-        </button>
-    </nav>
-</div>
+        <div v-if="activeTab === 'profile'" style="padding: 30px; text-align: center;">
+            <div style="font-size: 60px; margin-bottom: 10px;">👤</div>
+            <h2 style="margin: 0;">{{ userName }}</h2>
+            <p style="color: #999;">История заказов появится здесь</p>
+        </div>
 
-<script>
-    const tg = window.Telegram.WebApp;
-    const { createApp } = Vue;
-
-    createApp({
-        data() {
-            return {
-                activeTab: 'menu',
-                isSideOpen: false,
-                user: { name: 'Гость', photo: '' },
-                address: '',
-                deliveryZone: 'Город',
-                deliveryZones: { 'Сотые': 400, 'Нижний': 700, 'Город': 1200, 'Отдаленные': 2000 },
-                form: { name: '', phone: '' },
-                cart: JSON.parse(localStorage.getItem('jade_cart') || '[]'),
-                favorites: JSON.parse(localStorage.getItem('jade_fav') || '[]'),
-                orderHistory: JSON.parse(localStorage.getItem('jade_history') || '[]'),
-                menuData: {
-                    'Салаты': [
-                        {name:'Морковь по-корейски', weight:'150 г', price:85},
-                        {name:'Оливье', weight:'150 г', price:90},
-                        {name:'Фунчоза', weight:'150 г', price:85},
-                        {name:'Овощной', weight:'150 г', price:85},
-                        {name:'Помидоры с сыром', weight:'150 г', price:85},
-                        {name:'Свекольный', weight:'100 г', price:85},
-                        {name:'Цезарь с курицей', weight:'150 г', price:220},
-                    ],
-                    'Первые блюда': [{name:'Шулэн', weight:'500 г', price:175}],
-                    'Вторые блюда': [{name:'Буузы вареные', weight:'80 г', price:80}],
-                    'Гарниры': [{name:'Картошка фри', weight:'150 г', price:160}],
-                    'Выпечка': [
-                        {name:'Боовы', weight:'5 шт', price:70},
-                        {name:'Блины', weight:'3 шт', price:70},
-                        {name:'Урмэ', weight:'100 г', price:100},
-                    ],
-                    'Напитки': [{name:'Морс брусничный', weight:'0.33 л', price:80}]
-                }
-            }
-        },
-        computed: {
-            cartTotal() { return this.cart.reduce((s, i) => s + i.price * i.qty, 0) },
-            finalTotal() { return this.cartTotal + this.deliveryZones[this.deliveryZone] }
-        },
-        watch: {
-            cart: { handler(v) { localStorage.setItem('jade_cart', JSON.stringify(v)) }, deep: true },
-            favorites: { handler(v) { localStorage.setItem('jade_fav', JSON.stringify(v)) }, deep: true }
-        },
-        methods: {
-            updateCart(item, delta) {
-                const inCart = this.cart.find(i => i.name === item.name);
-                if (inCart) {
-                    inCart.qty += delta;
-                    if (inCart.qty <= 0) this.cart = this.cart.filter(i => i.name !== item.name);
-                } else {
-                    this.cart.push({ ...item, qty: 1 });
-                }
-                tg.HapticFeedback.impactOccurred('light');
-            },
-            getQty(name) { return this.cart.find(i => i.name === name)?.qty || 0 },
-            toggleFav(item) {
-                const idx = this.favorites.findIndex(f => f.name === item.name);
-                if (idx > -1) this.favorites.splice(idx, 1);
-                else this.favorites.push(item);
-                tg.HapticFeedback.impactOccurred('medium');
-            },
-            isFav(item) { return this.favorites.some(f => f.name === item.name) },
-            initMap() {
-                const mapContainer = document.getElementById('map');
-                if (!mapContainer) return;
-                const map = new mapgl.Map('map', { center: [107.58, 51.83], zoom: 12, key: 'cab82c94-e619-42eb-9814-3361712feaf0' });
-                map.on('click', e => {
-                    fetch(`https://catalog.api.2gis.com/3.0/items/geocode?lon=${e.lngLat[0]}&lat=${e.lngLat[1]}&fields=items.address&key=cab82c94-e619-42eb-9814-3361712feaf0`)
-                    .then(r => r.json()).then(data => {
-                        this.address = data.result.items[0].address_name;
-                    });
-                });
-            },
-            sendOrder() {
-                const date = new Date();
-                const orderId = date.toLocaleDateString('ru-RU').replace(/\./g, '') + '-' + Math.floor(10000 + Math.random() * 90000);
-                const orderData = {
-                    id: orderId,
-                    name: this.form.name,
-                    phone: this.form.phone,
-                    address: this.address,
-                    items: this.cart.map(i => `${i.name} x${i.qty}`).join(', '),
-                    total: this.finalTotal
-                };
-                
-                // Сохраняем в историю
-                this.orderHistory.unshift(orderData);
-                localStorage.setItem('jade_history', JSON.stringify(this.orderHistory));
-                
-                // Отправляем боту
-                tg.sendData(JSON.stringify(orderData));
-                this.cart = [];
-            }
-        },
-        mounted() {
-            tg.ready();
-            tg.expand();
-            if (tg.initDataUnsafe?.user) {
-                this.user.name = tg.initDataUnsafe.user.first_name;
-                this.user.photo = tg.initDataUnsafe.user.photo_url;
-            }
-            this.initMap();
-        }
-    }).mount('#app');
-</script>
-</body>
-</html>
+        <nav class="nav">
+            <button @click="activeTab = 'menu'" :class="['nav-item', activeTab === 'menu' ? 'active' : '']">МЕНЮ</button>
+            <button @click="activeTab = 'cart'" :class="['nav-item', activeTab === 'cart' ? 'active' : '']">КОРЗИНА ({{ cart.length }})</button>
+            <button @
