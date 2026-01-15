@@ -54,7 +54,7 @@
     
     <div v-if="isSideOpen" class="overlay" @click="isSideOpen = false"></div>
     <div :class="['side-menu', isSideOpen ? 'open' : '']">
-        <h2 :style="{color: 'var(--jade)'}">JADE FOOD</h2>
+        <h2 :style="{color: 'var(--jade)'}">NOMI доставка вкусной еды</h2>
         <hr style="border:0; height:1px; background:#eee; margin: 20px 0;">
         <p><b>🏠 О нас</b><br>Мы готовим из самых свежих продуктов по традиционным рецептам.</p>
         <p><b>🚚 Доставка</b><br>Работаем по всему городу и пригороду. Время доставки от 40 минут.</p>
@@ -102,7 +102,7 @@
                 </div>
                 <hr border="0" style="height:1px; background:#eee">
                 <div style="font-weight:800; display:flex; justify-content:space-between; margin-top: 10px;">
-                    <span>Итого блюда:</span> <span>{{ cartTotal }} ₽</span>
+                    <span>Итого:</span> <span>{{ cartTotal }} ₽</span>
                 </div>
             </div>
 
