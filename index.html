@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jade Delivery</title>
+    <title>NOMI</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
@@ -50,11 +50,11 @@
 <body>
 
 <div id="app">
-    <div class="work-hours">ГРАФИК РАБОТЫ: 10:00 — 22:00</div>
+    <div class="work-hours">ГРАФИК РАБОТЫ: 10:00 — 00:00</div>
     
     <div v-if="isSideOpen" class="overlay" @click="isSideOpen = false"></div>
     <div :class="['side-menu', isSideOpen ? 'open' : '']">
-        <h2 :style="{color: 'var(--jade)'}">JADE FOOD</h2>
+        <h2 :style="{color: 'var(--jade)'}">NOMI</h2>
         <hr style="border:0; height:1px; background:#eee; margin: 20px 0;">
         <p><b>🏠 О нас</b><br>Мы готовим из самых свежих продуктов по традиционным рецептам.</p>
         <p><b>🚚 Доставка</b><br>Работаем по всему городу и пригороду. Время доставки от 40 минут.</p>
@@ -64,7 +64,7 @@
 
     <div style="padding: 10px 15px; background: #fff; display: flex; align-items: center; position: sticky; top:0; z-index:500; border-bottom: 1px solid #f0f0f0;">
         <button @click="isSideOpen = true" style="background:none; border:none; font-size:24px; color:var(--jade)">☰</button>
-        <div style="flex:1; text-align:center; font-weight:800; color:var(--jade)">JADE FOOD</div>
+        <div style="flex:1; text-align:center; font-weight:800; color:var(--jade)">NOMI</div>
     </div>
 
     <div class="container" v-show="activeTab === 'menu'" style="padding-bottom: 80px;">
