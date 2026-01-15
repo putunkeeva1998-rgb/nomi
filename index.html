@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOMI</title>
+    <title>Jade Delivery</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
@@ -50,11 +50,11 @@
 <body>
 
 <div id="app">
-    <div class="work-hours">ГРАФИК РАБОТЫ: 10:00 — 00:00</div>
+    <div class="work-hours">ГРАФИК РАБОТЫ: 10:00 — 22:00</div>
     
     <div v-if="isSideOpen" class="overlay" @click="isSideOpen = false"></div>
     <div :class="['side-menu', isSideOpen ? 'open' : '']">
-        <h2 :style="{color: 'var(--jade)'}">NOMI</h2>
+        <h2 :style="{color: 'var(--jade)'}">JADE FOOD</h2>
         <hr style="border:0; height:1px; background:#eee; margin: 20px 0;">
         <p><b>🏠 О нас</b><br>Мы готовим из самых свежих продуктов по традиционным рецептам.</p>
         <p><b>🚚 Доставка</b><br>Работаем по всему городу и пригороду. Время доставки от 40 минут.</p>
@@ -64,7 +64,7 @@
 
     <div style="padding: 10px 15px; background: #fff; display: flex; align-items: center; position: sticky; top:0; z-index:500; border-bottom: 1px solid #f0f0f0;">
         <button @click="isSideOpen = true" style="background:none; border:none; font-size:24px; color:var(--jade)">☰</button>
-        <div style="flex:1; text-align:center; font-weight:800; color:var(--jade)">NOMI</div>
+        <div style="flex:1; text-align:center; font-weight:800; color:var(--jade)">JADE FOOD</div>
     </div>
 
     <div class="container" v-show="activeTab === 'menu'" style="padding-bottom: 80px;">
@@ -102,7 +102,7 @@
                 </div>
                 <hr border="0" style="height:1px; background:#eee">
                 <div style="font-weight:800; display:flex; justify-content:space-between; margin-top: 10px;">
-                    <span>Итого:</span> <span>{{ cartTotal }} ₽</span>
+                    <span>Итого блюда:</span> <span>{{ cartTotal }} ₽</span>
                 </div>
             </div>
 
@@ -179,17 +179,62 @@
                     'Салаты': [
                         {name:'Морковь по-корейски', weight:'150 г', price:85},
                         {name:'Оливье', weight:'150 г', price:90},
+                        {name:'Прага', weight:'150 г', price:90},
                         {name:'Фунчоза', weight:'150 г', price:85},
                         {name:'Овощной', weight:'150 г', price:85},
+                        {name:'Помидоры с сыром и чесноком', weight:'150 г', price:85},
+                        {name:'Свекольный', weight:'100 г', price:85},
                         {name:'Цезарь с курицей', weight:'150 г', price:220},
                     ],
-                    'Первые блюда': [{name:'Шулэн', weight:'500 г', price:175}],
-                    'Вторые блюда': [{name:'Буузы вареные', weight:'80 г', price:80}],
+                    'Первые блюда': [
+                        {name:'Шулэн', weight:'500 г', price:175},
+                        {name:'Баншатай шулэн', weight:'500 г', price:215},
+                        {name:'Пельмени в бульоне', weight:'500 г', price:190},
+                        {name:'Бухлеор из говядины', weight:'800 г', price:315},
+                    ],
+
+                    'Вторые блюда': [
+                        {name:'Буузы вареные', weight:'80 г', price:80},
+                        {name:'Буузы замороженные', weight:'80 г', price:70},
+                        {name:'Буузы жареные', weight:'80 г', price:85},
+                        {name:'Цуйван', weight:'300 г', price:260},
+                        {name:'Жареха', weight:'300 г', price:310},
+                        {name:'Гуляш по-монгольски', weight:'300 г', price:270},
+                        {name:'Паста карбонара', weight:'280 г', price:270},
+                        {name:'паста с курицей', weight:'280 г', price:270},
+                        {name:'Пельмени жареныее', weight:'150 г', price:200},
+                        {name:'Гуляш из говядины', weight:'150 г', price:170},
+                        {name:'Котлета из говядины', weight:'110 г', price:160},
+                        {name:'Наггетсы', weight:'8 шт', price:180},
+                        {name:'Детский набор', weight:'260 г', price:300},
+                        {name:'Курица с грибами в сливочном соусе', weight:'150 г', price:170},
+                        {name:'Кочевник', weight:'300 г', price:260},
+                        {name:'Пибим паб', weight:'350 г', price:300},
+                        {name:'Лагман жареный', weight:'300 г', price:260},
+                    ],
+
+                    'Гарниры': [
+                        {name:'Картошка фри', weight:'150 г', price:160},
+                        {name:'Картофельное пюрее', weight:'150 г', price:65},
+                        {name:'Рис', weight:'150 г', price:65},
+                        {name:'Картофель по-деревенски', weight:'200 г', price:170},
+                    ],
+
+                    'Сет': [
+                        {name:'6 вар бууз, 6 жар бууз, 6 хушууров, 2 разн салата, 5 порций боов, десерт Урмэ, запеченные свиные ребрышки с барбекю, картофель по-деревенски, свеж огурцы и лук, 5 сырных палочек и луковых колец, 3 вида соусов', weight:'150 г', price:3300},
+                    ],
                     'Выпечка': [
                         {name:'Боовы', weight:'5 шт', price:70},
                         {name:'Блины', weight:'3 шт', price:70},
+                        {name:'Урмэ (Холисо)', weight:'100 г', price:100},
+                        {name:'Хушуур', weight:'2 шт', price:185},
+                        {name:'Чебурек с мясом', weight:'1 шт', price:125},
+                        {name:'Чебурек с мясом и сыром', weight:'1 шт', price:135},
                     ],
-                    'Напитки': [{name:'Морс брусничный', weight:'0.33 л', price:80}]
+                    'Напитки': [
+                        {name:'Морс брусничный', weight:'0.33 л', price:80},
+                        {name:'Морс облепиховый', weight:'0.33 л', price:80},
+                    ]
                 }
             }
         },
